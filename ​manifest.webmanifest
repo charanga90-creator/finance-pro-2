@@ -1,0 +1,19 @@
+{
+  "name": "Finance Pro 2.0",
+  "short_name": "Finance Pro",
+  "description": "Gold & Black Personal Finance Manager",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#090b0e",
+  "theme_color": "#d4af37",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "./icon.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}
