@@ -1,19 +1,18 @@
 {
   "name": "Finance Pro 2.0",
   "short_name": "Finance Pro",
-  "description": "Personal budget, expense, and loan tracker web app",
+  "description": "Gold & Black Personal Finance Manager",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#090b0e",
   "theme_color": "#d4af37",
   "orientation": "portrait-primary",
-  "dir": "ltr",
   "icons": [
     {
-      "src": "./icon.jpg",
+      "src": "./icon.png",
       "sizes": "512x512",
-      "type": "image/jpeg",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]
