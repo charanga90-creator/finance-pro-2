@@ -2,7 +2,7 @@ const CACHE_NAME = "finance-pro-2-0-v2";
 const ASSETS = [
   "./",
   "./index.html",
-  "./manifest.webmanifest",
+  "./manifest.json",
   "./icon.jpg"
 ];
 
