@@ -70,7 +70,25 @@ canvas.finance-chart{width:100%;height:250px;display:block}
 <section id="settings" class="page"><h2>⚙️ සැකසුම් සහ Backup</h2><div class="panel"><h3>📜 පැරණි ගනුදෙනු ආරම්භ කරන්න</h3><p class="muted">පසුගිය දින ගනුදෙනු උදාහරණ එකතු වේ.</p><button type="button" class="info" onclick="seedPastTransactions()">📜 පැරණි ගනුදෙනු ආරම්භ කරන්න</button></div><div class="panel"><h3>💾 දත්ත Backup</h3><p class="muted">Browser Data මැකුවොත් දත්ත නැති වෙයි - නිතර Backup ගන්න.</p><div class="actions"><button type="button" onclick="exportBackup()">⬇️ Backup</button><button type="button" class="secondary" onclick="document.getElementById('restoreFile').click()">⬆️ Restore</button><input type="file" id="restoreFile" accept=".json,application/json" class="hidden"></div></div><div class="panel"><h3>🏷️ කාණ්ඩ කළමනාකරණය</h3><p class="muted">අලුත් කාණ්ඩ Icon සමඟ එක් කරන්න.</p><div style="display:grid;grid-template-columns:1fr 110px 1fr;gap:10px;margin-bottom:10px"><div><label>📂 වර්ගය</label><select id="newCategoryType" onchange="renderCategoryLists()"><option value="expense">📕 වියදම්</option><option value="income">📘 ආදායම්</option></select></div><div><label>😀 Icon</label><input id="newCategoryIcon" type="text" value="🏷️" maxlength="6" style="text-align:center"></div><div><label>✍️ නම</label><input id="newCategoryName" type="text" placeholder="උදා: පන්ති ගාස්තු"></div></div><label>🎨 Icon ලැයිස්තුව</label><div class="icon-picker-grid" id="extraIconPicker"></div><button type="button" onclick="addCategory()">➕ කාණ්ඩය එකතු කරන්න</button><div class="split section-gap"><div><h3>📕 වියදම් කාණ්ඩ</h3><div id="expenseCategoryList"></div></div><div><h3>📘 ආදායම් කාණ්ඩ</h3><div id="incomeCategoryList"></div></div></div></div><div class="panel"><h3>🔐 PIN ආරක්ෂාව</h3><p class="muted" id="pinStatus">PIN ආරක්ෂාව සකසා නැත.</p><div class="actions"><button type="button" onclick="openPinSettings()">🔑 PIN සකසන්න / වෙනස් කරන්න</button><button type="button" class="danger" onclick="removePin()">🔓 PIN ඉවත් කරන්න</button></div></div><div class="panel"><h3>🗑️ දත්ත කළමනාකරණය</h3><p class="muted">සියලුම දත්ත මකා දැමීම - ආපසු හරවන්න බෑ.</p><button type="button" class="danger" onclick="resetData()">⚠️ සියලු දත්ත මකන්න</button></div></section>
 </main>
 <nav class="bottom-nav"><div class="nav-inner"><button type="button" class="nav-btn active" data-page="dashboard" onclick="showPage('dashboard')"><span class="ico">🏠</span>මුල් පිටුව</button><button type="button" class="nav-btn" data-page="transactions" onclick="showPage('transactions')"><span class="ico">⇄</span>ගනුදෙනු</button><button type="button" class="nav-btn" data-page="accounts" onclick="showPage('accounts')"><span class="ico">🏦</span>ගිණුම්</button><button type="button" class="nav-btn" data-page="cards" onclick="showPage('cards')"><span class="ico">💳</span>කාඩ්</button><button type="button" class="nav-btn" data-page="chits" onclick="showPage('chits')"><span class="ico">🎲</span>සීට්ටු</button><button type="button" class="nav-btn" data-page="loans" onclick="showPage('loans')"><span class="ico">🤝</span>ණය</button><button type="button" class="nav-btn" data-page="estimates" onclick="showPage('estimates')"><span class="ico">📊</span>ඇස්ත.</button><button type="button" class="nav-btn" data-page="reports" onclick="showPage('reports')"><span class="ico">📈</span>වාර්තා</button><button type="button" class="nav-btn" data-page="notes" onclick="showPage('notes')"><span class="ico">📝</span>ලැයිස්තු</button></div></nav>
-<div class="modal" id="pinModal"><div class="modal-box"><h3 id="pinTitle">🔐 PIN ආරක්ෂාව</h3><p class="muted" id="pinMessage">PIN අංකය ඇතුළත් කරන්න.</p><input type="password" id="pinInput" inputmode="numeric" maxlength="8" placeholder="PIN අංකය"><div class="actions section-gap"><button type="button" onclick="submitPin()">✅ තහවුරු කරන්න</button><button type="button" class="secondary" id="pinCancelBtn" onclick="closePinModal()">✖️ අවලංගු</button></div></div></div>
+
+<div class="modal" id="pinModal">
+  <div class="modal-box">
+    <h3 id="pinTitle">🔐 PIN ආරක්ෂාව</h3>
+    <p class="muted" id="pinMessage">PIN අංකය ඇතුළත් කරන්න.</p>
+    <div style="display:flex;gap:8px;align-items:center">
+      <input type="password" id="pinInput" inputmode="numeric" maxlength="8" placeholder="PIN අංකය" style="flex:1" onkeydown="if(event.key==='Enter'){event.preventDefault();submitPin();}">
+      <button type="button" class="secondary" id="togglePinBtn" onclick="togglePinVisibility()" style="padding:11px 12px" title="PIN පෙන්වන්න">👁️</button>
+    </div>
+    <div class="actions section-gap">
+      <button type="button" onclick="submitPin()">✅ තහවුරු කරන්න</button>
+      <button type="button" class="secondary" id="pinCancelBtn" onclick="closePinModal()">✖️ අවලංගු</button>
+    </div>
+    <div id="forgotPinWrap" class="section-gap" style="border-top:1px solid var(--border);padding-top:10px;text-align:center">
+      <button type="button" class="danger" style="width:100%;font-size:12px;padding:8px" onclick="forgotPinReset()">🔓 PIN අමතකද? (දත්ත නොමැකී PIN ඉවත් කරන්න)</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal" id="editTxModal"><div class="modal-box"><h3>✏️ ගනුදෙනුව සංස්කරණය</h3><form id="editTxForm" style="grid-template-columns:1fr"><input type="hidden" id="editTxId"><div><label>📅 දිනය</label><input type="date" id="editTxDate" required></div><div><label>💵 මුදල</label><input type="number" id="editTxAmount" min="0.01" step="0.01" required></div><div><label>🏷️ කාණ්ඩය</label><select id="editTxCategory" required></select></div><div><label>📝 විස්තරය</label><input type="text" id="editTxNote"></div><div class="actions"><button type="submit">💾 යාවත්කාලීන කරන්න</button><button type="button" class="secondary" onclick="closeEditTxModal()">✖️ වසන්න</button></div></form></div></div>
 <div class="modal" id="repayLoanModal"><div class="modal-box"><h3 id="repayLoanTitle">🤝 ණය ගෙවීම</h3><p class="muted" id="repayLoanInfo"></p><form id="repayLoanForm" style="grid-template-columns:1fr"><input type="hidden" id="repayLoanId"><div><label>💵 මුදල</label><input type="number" id="repayAmount" min="0.01" step="0.01" required></div><div><label>📅 දිනය</label><input type="date" id="repayDate" required></div><div><label>🏦 ගිණුම</label><select id="repayAccount" required></select></div><div class="actions"><button type="submit">✅ තහවුරු කරන්න</button><button type="button" class="secondary" onclick="closeRepayLoanModal()">✖️ අවලංගු</button></div></form></div></div>
 <div class="modal" id="chitDepositModal"><div class="modal-box"><h3>🎲 සීට්ටුවට වාරික එකතු කිරීම</h3><p class="muted" id="chitDepositInfo"></p><form id="chitDepositForm" style="grid-template-columns:1fr"><input type="hidden" id="chitDepositId"><div><label>🏦 මුදල් අඩු වන ගිණුම</label><select id="chitDepositAccount" required></select></div><div><label>💵 වාරික මුදල</label><input type="number" id="chitAddAmount" min="0.01" step="0.01" required></div><div><label>📅 දිනය</label><input type="date" id="chitAddDate" required></div><div><label>📝 සටහන</label><input type="text" id="chitAddNote" placeholder="උදා: නොවැම්බර් වාරිකය"></div><div class="actions"><button type="submit">➕ තැන්පතුව එක් කරන්න</button><button type="button" class="secondary" onclick="closeChitDepositModal()">✖️ අවලංගු</button></div></form></div></div>
@@ -92,7 +110,7 @@ function defaultExpenseCategories(){return [{icon:"👶",name:"දරුවා�
 function defaultIncomeCategories(){return [{icon:"💼",name:"මාසික වැටුප"},{icon:"⏰",name:"අතිකාල දීමනා"},{icon:"🎖️",name:"දීමනා"},{icon:"✨",name:"අමතර ආදායම්"},{icon:"🏪",name:"ව්‍යාපාර ආදායම්"},{icon:"💵",name:"ලැබුණු ණය මුදල්"},{icon:"📥",name:"වෙනත් ආදායම්"}];}
 function normalizeCategoryList(list,fallback){if(!Array.isArray(list)||!list.length)return fallback;return list.map(item=>typeof item==="string"?{icon:"🏷️",name:item}:{icon:item?.icon||"🏷️",name:item?.name||"වෙනත්"});}
 function createDefaultData(){return {version:2,accounts:[{id:uid(),name:"NSB",type:"bank",opening:0},{id:uid(),name:"HNB",type:"bank",opening:0},{id:uid(),name:"BOC",type:"bank",opening:0},{id:uid(),name:"අතේ මුදල්",type:"cash",opening:0}],cards:[{id:uid(),name:"HNB Credit Card",limit:75000,openingDue:0,payments:[]}],chits:[],transactions:[],transfers:[],loans:[],estimates:[],notes:[],expenseCategories:defaultExpenseCategories(),incomeCategories:defaultIncomeCategories(),pinHash:""};}
-function normalizeData(d){const base=createDefaultData();if(!d||typeof d!=="object")return base;return {version:2,accounts:Array.isArray(d.accounts)?d.accounts:base.accounts,cards:Array.isArray(d.cards)?d.cards:base.cards,chits:Array.isArray(d.chits)?d.chits:[],transactions:Array.isArray(d.transactions)?d.transactions:[],transfers:Array.isArray(d.transfers)?d.transfers:[],loans:Array.isArray(d.loans)?d.loans:[],estimates:Array.isArray(d.estimates)?d.estimates:[],notes:Array.isArray(d.notes)?d.notes:[],expenseCategories:normalizeCategoryList(d.expenseCategories,base.expenseCategories),incomeCategories:normalizeCategoryList(d.incomeCategories,base.incomeCategories),pinHash:d.pinHash||""};}
+function normalizeData(d){const base=createDefaultData();if(!d||typeof d!=="object")return base;return {version:2,accounts:Array.isArray(d.accounts)?d.accounts:base.accounts,cards:Array.isArray(d.cards)?d.cards:base.cards,chits:Array.isArray(d.chits)?d.chits:[],transactions:Array.isArray(d.transactions)?d.transactions:[],transfers:Array.isArray(d.transfers)?d.transfers:[],loans:Array.isArray(d.loans)?d.loans:[],estimates:Array.isArray(d.estimates)?d.estimates:[],notes:Array.isArray(d.notes)?d.notes:[],expenseCategories:normalizeCategoryList(d.expenseCategories,base.expenseCategories),incomeCategories:normalizeCategoryList(d.incomeCategories,base.incomeCategories),pinHash:typeof d.pinHash==="string"?d.pinHash.trim():""};}
 function loadData(){try{const raw=localStorage.getItem(STORAGE_KEY);if(raw)return normalizeData(JSON.parse(raw));}catch(e){alert("දත්ත කියවීමේ දෝෂයක්!");}return createDefaultData();}
 let data=loadData();
 function saveData(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(data));}catch(e){alert("Save කරන්න බෑ!");}}
@@ -100,7 +118,6 @@ function notify(m){const el=document.getElementById("toast");el.textContent=m;el
 function categoryIcon(name,type="expense"){const all=[...(data.expenseCategories||[]),...(data.incomeCategories||[])];const f=all.find(c=>c.name===name);return f?f.icon:(type==="income"?"📘":"📕");}
 function showPage(id){document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id===id));document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.page===id));renderAll();window.scrollTo({top:0,behavior:"smooth"});}
 
-/* ===== ගිණුම් ශේෂය: ආරම්භක සීට්ටු මුදල, වාරික, සහ සීට්ටු ආපසු ලැබීම් නිවැරදිව ගණනය වේ ===== */
 function accountBalance(accountId){
   const acc=data.accounts.find(a=>a.id===accountId);
   if(!acc)return 0;
@@ -253,7 +270,6 @@ document.getElementById("editTxForm").addEventListener("submit",function(e){
 function renderAccounts(){document.getElementById("accountList").innerHTML=data.accounts.length?`<div class="table-wrap"><table><thead><tr><th>🏦 ගිණුම</th><th>📂 වර්ගය</th><th>💰 ආරම්භක</th><th>💳 වත්මන්</th><th>⚙️ ක්‍රියා</th></tr></thead><tbody>${data.accounts.map(a=>{const bal=accountBalance(a.id);return `<tr><td>${a.type==="cash"?"💵":"🏦"} <b>${safe(a.name)}</b></td><td>${a.type==="cash"?"💵 අතේ මුදල්":"🏦 බැංකු"}</td><td>${money(a.opening)}</td><td class="${bal<0?"expense-val":"income-val"}"><b>${signedMoney(bal)}</b></td><td><button type="button" class="danger" style="padding:6px 9px" onclick="deleteAccount('${a.id}')">🗑️</button></td></tr>`}).join("")}</tbody></table></div>`:'<div class="empty">ගිණුම් නැත</div>';const rt=[...data.transfers].sort((a,b)=>(b.date||"").localeCompare(a.date||""));document.getElementById("transferList").innerHTML=rt.length?`<div class="table-wrap"><table><thead><tr><th>📅 දිනය</th><th>📤 යවන</th><th>📥 ලබන</th><th>📝 සටහන</th><th>💵 මුදල</th><th>⚙️</th></tr></thead><tbody>${rt.map(t=>{const f=data.accounts.find(a=>a.id===t.from);const to=data.accounts.find(a=>a.id===t.to);return `<tr><td>${safe(t.date)}</td><td>${safe(f?.name||"-")}</td><td>${safe(to?.name||"-")}</td><td>${safe(t.note||"-")}</td><td class="gold-val"><b>${money(t.amount)}</b></td><td><button type="button" class="danger" style="padding:6px 9px" onclick="deleteTransfer('${t.id}')">🗑️</button></td></tr>`}).join("")}</tbody></table></div>`:'<div class="empty">මාරු කිරීම් නැත</div>';}
 function renderCards(){document.getElementById("cardList").innerHTML=data.cards.length?`<div class="table-wrap"><table><thead><tr><th>💳 කාඩ්පත</th><th>📊 සීමාව</th><th>📕 භාවිත කළ</th><th>📘 ඉතිරි</th><th>⚙️</th></tr></thead><tbody>${data.cards.map(c=>{const due=cardDue(c);return `<tr><td>💳 <b>${safe(c.name)}</b></td><td>${money(c.limit)}</td><td class="expense-val"><b>${money(due)}</b></td><td class="income-val"><b>${money(Math.max(0,c.limit-due))}</b></td><td><button type="button" class="danger" style="padding:6px 9px" onclick="deleteCard('${c.id}')">🗑️</button></td></tr>`}).join("")}</tbody></table></div>`:'<div class="empty">කාඩ්පත් නැත</div>';}
 
-/* ===== සීට්ටු කළමනාකරණය: ආරම්භ කිරීම, වාරික දැමීම, සහ සීට්ටුව ලබාගැනීම ===== */
 document.getElementById("chitForm").addEventListener("submit",function(e){
   e.preventDefault();
   const name=document.getElementById("chitName").value.trim();
@@ -407,13 +423,95 @@ function exportBackup(){let blob=new Blob([JSON.stringify(data,null,2)],{type:"a
 document.getElementById("restoreFile").addEventListener("change",e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let nd=JSON.parse(r.result);if(!Array.isArray(nd.accounts))throw Error("bad");data=normalizeData(nd);saveData();renderAll();notify("Backup Restore කළා!");}catch{alert("වැරදි Backup File එකක්!");}e.target.value="";};r.readAsText(f);});
 function resetData(){if(!confirm("සියලු දත්ත මකන්නද? ආපසු හරවන්න බෑ!"))return;if(!confirm("ඇත්තටම මකන්නද?"))return;localStorage.removeItem(STORAGE_KEY);data=createDefaultData();saveData();renderAll();notify("සියලු දත්ත මකා දැමුවා.");}
 function seedPastTransactions(){if(!data.accounts.length)return notify("පළමුව ගිණුමක් සාදන්න!");if(!confirm("පැරණි ගනුදෙනු 8ක් එකතු කරන්නද?"))return;let samples=[{type:"income",amount:85000,date:daysAgo(25),category:"මාසික වැටුප",note:"පසුගිය මාසේ වැටුප"},{type:"expense",amount:12000,date:daysAgo(20),category:"ආහාර හා ගෘහස්ථ බඩු",note:"මාසික බඩු"},{type:"expense",amount:4500,date:daysAgo(18),category:"විදුලිය",note:"විදුලි බිල"},{type:"expense",amount:8500,date:daysAgo(15),category:"පාසල් ගාස්තු",note:"පාසල් ගාස්තු"},{type:"expense",amount:6000,date:daysAgo(10),category:"ප්‍රවාහන හා ඉන්ධන",note:"තෙල්"},{type:"expense",amount:3500,date:daysAgo(8),category:"දුරකථන හා අන්තර්ජාලය",note:"Recharge"},{type:"income",amount:15000,date:daysAgo(5),category:"අමතර ආදායම්",note:"අමතර වැඩ"},{type:"expense",amount:7000,date:daysAgo(2),category:"සෞඛ්‍ය",note:"බෙහෙත්"}];let acc=data.accounts[0].id;samples.forEach(s=>{data.transactions.push({id:uid(),...s,accountId:acc,cardId:""});});saveData();renderAll();notify("පැරණි ගනුදෙනු එකතු කළා.");}
+
+/* ===== වැඩිදියුණු කළ PIN ආරක්ෂාව (Show PIN + Confirm PIN + Forgot PIN Reset) ===== */
 let pinMode="unlock";let pinCallback=null;
 function hashPin(pin){let h=0;for(let i=0;i<pin.length;i++){h=((h<<5)-h)+pin.charCodeAt(i);h|=0;}return "pin_"+h;}
-function openPinSettings(){document.getElementById("pinCancelBtn").style.display="inline-flex";if(data.pinHash){pinMode="change";document.getElementById("pinTitle").textContent="🔑 PIN වෙනස් කිරීම";document.getElementById("pinMessage").textContent="පරණ PIN එක මුලින්ම දෙන්න.";}else{pinMode="set";document.getElementById("pinTitle").textContent="🔑 අලුත් PIN එකක්";document.getElementById("pinMessage").textContent="අංක 4-8ක් දෙන්න.";}document.getElementById("pinInput").value="";document.getElementById("pinModal").classList.add("show");}
+function togglePinVisibility(){const inp=document.getElementById("pinInput");const btn=document.getElementById("togglePinBtn");if(!inp)return;const isPass=inp.type==="password";inp.type=isPass?"text":"password";if(btn)btn.textContent=isPass?"🙈":"👁️";}
+function resetPinInputState(){const inp=document.getElementById("pinInput");const btn=document.getElementById("togglePinBtn");if(inp){inp.value="";inp.type="password";}if(btn)btn.textContent="👁️";}
+function forgotPinReset(){
+  if(!confirm("PIN ආරක්ෂාව ඉවත් කර App එක විවෘත කරන්නද?\n(ඔබ ඇතුළත් කළ කිසිදු දත්තයක් මැකෙන්නේ නැත)"))return;
+  data.pinHash="";
+  saveData();
+  closePinModal();
+  updatePinStatus();
+  notify("PIN එක ඉවත් කළා. App එක විවෘත වුණා ✅");
+}
+function openPinSettings(){
+  document.getElementById("pinCancelBtn").style.display="inline-flex";
+  document.getElementById("forgotPinWrap").style.display="none";
+  submitPin._step=0;submitPin._temp="";
+  if(data.pinHash){
+    pinMode="change";
+    document.getElementById("pinTitle").textContent="🔑 PIN වෙනස් කිරීම";
+    document.getElementById("pinMessage").textContent="පරණ PIN එක මුලින්ම දෙන්න.";
+  }else{
+    pinMode="set";
+    document.getElementById("pinTitle").textContent="🔑 අලුත් PIN එකක්";
+    document.getElementById("pinMessage").textContent="අංක 4-8ක් දෙන්න.";
+  }
+  resetPinInputState();
+  document.getElementById("pinModal").classList.add("show");
+}
 function removePin(){if(!data.pinHash)return notify("PIN එකක් නැත.");if(!confirm("PIN එක ඉවත් කරන්නද?"))return;data.pinHash="";saveData();renderAll();notify("PIN එක ඉවත් කළා.");}
-function submitPin(){let pin=document.getElementById("pinInput").value.trim();if(pinMode==="unlock"){if(hashPin(pin)===data.pinHash){closePinModal();if(pinCallback)pinCallback();}else notify("වැරදි PIN එකක්!");return;}if(pinMode==="set"){if(pin.length<4)return notify("PIN එක අඩුම 4ක් වෙන්න ඕන.");data.pinHash=hashPin(pin);saveData();closePinModal();renderAll();notify("PIN එක සකසා ඇත.");return;}if(pinMode==="change"){if(!submitPin._step){if(hashPin(pin)!==data.pinHash)return notify("පරණ PIN එක වැරදියි!");submitPin._step=1;document.getElementById("pinMessage").textContent="දැන් අලුත් PIN එක දෙන්න.";document.getElementById("pinInput").value="";return;}else{if(pin.length<4)return notify("PIN එක අඩුම 4ක් වෙන්න ඕන.");data.pinHash=hashPin(pin);submitPin._step=0;saveData();closePinModal();renderAll();notify("PIN එක වෙනස් කළා.");}}}
-function closePinModal(){document.getElementById("pinModal").classList.remove("show");submitPin._step=0;}
+function submitPin(){
+  let pin=document.getElementById("pinInput").value.trim();
+  if(pinMode==="unlock"){
+    if(hashPin(pin)===data.pinHash){closePinModal();if(pinCallback)pinCallback();}
+    else notify("වැරදි PIN එකක්!");
+    return;
+  }
+  if(pinMode==="set"){
+    if(!submitPin._step){
+      if(pin.length<4)return notify("PIN එක අඩුම 4ක් වෙන්න ඕන.");
+      submitPin._temp=pin;
+      submitPin._step=1;
+      document.getElementById("pinMessage").textContent="තහවුරු කිරීමට එම PIN අංකයම නැවත දෙන්න.";
+      resetPinInputState();
+      return;
+    }else{
+      if(pin!==submitPin._temp){
+        submitPin._step=0;submitPin._temp="";
+        document.getElementById("pinMessage").textContent="අංක 4-8ක් දෙන්න.";
+        resetPinInputState();
+        return notify("PIN අංක දෙක සමාන නැත! නැවත දෙන්න.");
+      }
+      data.pinHash=hashPin(pin);
+      saveData();closePinModal();renderAll();
+      notify("PIN එක නිවැරදිව සකසා ඇත ✅");
+      return;
+    }
+  }
+  if(pinMode==="change"){
+    if(!submitPin._step){
+      if(hashPin(pin)!==data.pinHash)return notify("පරණ PIN එක වැරදියි!");
+      submitPin._step=1;
+      document.getElementById("pinMessage").textContent="දැන් අලුත් PIN එක දෙන්න (අංක 4-8).";
+      resetPinInputState();
+      return;
+    }else if(submitPin._step===1){
+      if(pin.length<4)return notify("PIN එක අඩුම 4ක් වෙන්න ඕන.");
+      submitPin._temp=pin;
+      submitPin._step=2;
+      document.getElementById("pinMessage").textContent="තහවුරු කිරීමට අලුත් PIN අංකය නැවත දෙන්න.";
+      resetPinInputState();
+      return;
+    }else{
+      if(pin!==submitPin._temp){
+        submitPin._step=1;submitPin._temp="";
+        document.getElementById("pinMessage").textContent="දැන් අලුත් PIN එක දෙන්න (අංක 4-8).";
+        resetPinInputState();
+        return notify("PIN අංක දෙක සමාන නැත! නැවත දෙන්න.");
+      }
+      data.pinHash=hashPin(pin);
+      saveData();closePinModal();renderAll();
+      notify("PIN එක වෙනස් කළා ✅");
+    }
+  }
+}
+function closePinModal(){document.getElementById("pinModal").classList.remove("show");submitPin._step=0;submitPin._temp="";resetPinInputState();}
 function updatePinStatus(){document.getElementById("pinStatus").textContent=data.pinHash?"✅ PIN ආරක්ෂාව සක්‍රීයයි.":"PIN ආරක්ෂාව සකසා නැත.";}
+
 document.getElementById("txType").addEventListener("change",function(){let isCard=this.value==="cardPurchase";document.getElementById("txCardWrap").classList.toggle("hidden",!isCard);document.getElementById("txAccountWrap").classList.toggle("hidden",isCard);renderTransactionCategories();});
 document.getElementById("txForm").addEventListener("submit",function(e){e.preventDefault();let type=document.getElementById("txType").value;let amt=number(document.getElementById("txAmount").value);let date=document.getElementById("txDate").value;let cat=document.getElementById("txCategory").value;let note=document.getElementById("txNote").value.trim();let accId=document.getElementById("txAccount").value;let cardId=document.getElementById("txCard").value;if(amt<=0||!date)return notify("මුදල සහ දිනය දෙන්න.");if(type==="expense"){let acc=data.accounts.find(a=>a.id===accId);if(!acc)return notify("ගිණුමක් තෝරන්න.");if(accountBalance(acc.id)<amt)return notify("ගිණුමේ මුදල් මදි!");}if(type==="cardPurchase"){let card=data.cards.find(c=>c.id===cardId);if(!card)return notify("කාඩ්පතක් තෝරන්න.");if(cardDue(card)+amt>number(card.limit))return notify("කාඩ් සීමාව ඉක්මවෙනවා!");}data.transactions.push({id:uid(),type,amount:amt,date,category:cat,accountId:type==="cardPurchase"?"":accId,cardId:type==="cardPurchase"?cardId:"",note});saveData();this.reset();document.getElementById("txType").dispatchEvent(new Event("change"));document.getElementById("txDate").value=today();renderAll();notify("ගනුදෙනුව සුරැකුණා.");});
 function deleteTransaction(id){
@@ -449,7 +547,7 @@ function deleteCard(id){const card=data.cards.find(c=>c.id===id);if(data.transac
 document.getElementById("cardPayForm").addEventListener("submit",function(e){e.preventDefault();let cardId=document.getElementById("payCard").value;let accId=document.getElementById("payAccount").value;let amt=number(document.getElementById("payAmount").value);let date=document.getElementById("payDate").value;let note=document.getElementById("payNote").value.trim();let card=data.cards.find(c=>c.id===cardId);if(!card)return notify("කාඩ්පතක් තෝරන්න.");if(amt<=0||!date)return notify("මුදල සහ දිනය දෙන්න.");if(amt>cardDue(card))return notify("ගෙවන මුදල ණයට වඩා වැඩියි!");if(accountBalance(accId)<amt)return notify("ගිණුමේ මුදල් මදි!");card.payments=card.payments||[];card.payments.push({id:uid(),amount:amt,date,accountId:accId,note});saveData();this.reset();document.getElementById("payDate").value=today();renderAll();notify("කාඩ් බිල්පත ගෙව්වා.");});
 window.addEventListener("resize",()=>{if(document.getElementById("reports").classList.contains("active"))renderReports();});
 function renderAll(){renderSelects();renderDashboard();renderTransactions();renderAccounts();renderCards();renderChits();renderLoans();renderEstimates();renderReports();renderNotes();renderCategoryLists();updatePinStatus();syncLoanTypeOptions();}
-function init(){let d=today();["txDate","transferDate","payDate","loanDate","chitDate","noteDate"].forEach(id=>{let el=document.getElementById(id);if(el)el.value=d;});document.getElementById("reportDate").value=currentMonth();document.getElementById("estimateMonth").value=currentMonth();document.getElementById("txMonthFilter").value="";renderAll();if(data.pinHash){pinMode="unlock";document.getElementById("pinTitle").textContent="🔐 PIN එක දෙන්න";document.getElementById("pinMessage").textContent="App එක විවෘත කිරීමට PIN එක දෙන්න.";document.getElementById("pinCancelBtn").style.display="none";document.getElementById("pinModal").classList.add("show");pinCallback=()=>{notify("ආයුබෝවන්! 👋");};}else{notify("ආයුබෝවන්! Finance Pro 2.0 ට සාදරයෙන් පිළිගනිමු 👋");}}
+function init(){let d=today();["txDate","transferDate","payDate","loanDate","chitDate","noteDate"].forEach(id=>{let el=document.getElementById(id);if(el)el.value=d;});document.getElementById("reportDate").value=currentMonth();document.getElementById("estimateMonth").value=currentMonth();document.getElementById("txMonthFilter").value="";renderAll();if(data.pinHash){pinMode="unlock";document.getElementById("pinTitle").textContent="🔐 PIN එක දෙන්න";document.getElementById("pinMessage").textContent="App එක විවෘත කිරීමට PIN එක දෙන්න.";document.getElementById("pinCancelBtn").style.display="none";document.getElementById("forgotPinWrap").style.display="block";resetPinInputState();document.getElementById("pinModal").classList.add("show");pinCallback=()=>{notify("ආයුබෝවන්! 👋");};}else{notify("ආයුබෝවන්! Finance Pro 2.0 ට සාදරයෙන් පිළිගනිමු 👋");}}
 init();
 </script>
 <script>
